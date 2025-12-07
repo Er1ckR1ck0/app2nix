@@ -9,6 +9,8 @@ pkgs.stdenv.mkDerivation {
     sha256 = "0r5a6ylwmd69qkhaxvgd4scl55miv7m244w4sk2cj3msa1gibv1i";
   };
 
+  dontWrapQtApps = true;
+
   nativeBuildInputs = [
     pkgs.autoPatchelfHook
     pkgs.dpkg
@@ -44,6 +46,8 @@ pkgs.stdenv.mkDerivation {
     pkgs.xorg.libXrandr
     pkgs.xorg.libxcb
   ];
+  
+  
 
   unpackPhase = "dpkg-deb --fsys-tarfile $src | tar -x --no-same-permissions --no-same-owner";
 

@@ -291,6 +291,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    if pkg_map.contains_key("qt6.qtbase") && pkg_map.contains_key("qt5.qtbase") {
+        println!(">>> [Warning] Detected both Qt5 and Qt6 dependencies. Removing Qt5 to avoid conflicts.");
+        pkg_map.retain(|k, _| !k.starts_with("qt5"));
+    }
+
     let mut sorted_pkgs: Vec<String> = pkg_map.keys().cloned().collect();
     sorted_pkgs.sort();
 

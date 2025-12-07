@@ -9,6 +9,8 @@
     sha256 = "{sha256}";
   }};
 
+  dontWrapQtApps = true;
+
   nativeBuildInputs = [
 {native}
   ];
@@ -17,8 +19,6 @@
 {build_inputs_body}
   ];
   
-  dontWrapQtApps = true;
-
   unpackPhase = "dpkg-deb --fsys-tarfile $src | tar -x --no-same-permissions --no-same-owner";
 
   installPhase = ''
