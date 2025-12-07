@@ -1,0 +1,45 @@
+{header}
+
+{stdenv} {{
+  pname = "{name}";
+  version = "{version}";
+
+  src = {fetchurl} {{
+    url = "{url}";
+    sha256 = "{sha256}";
+  }};
+
+  nativeBuildInputs = [
+{native}
+  ];
+
+  buildInputs = [
+{build_inputs_body}
+  ];
+
+  unpackPhase = "dpkg-deb --fsys-tarfile $src | tar -x --no-same-permissions --no-same-owner";
+
+  installPhase = ''
+    mkdir -p $out
+    cp -r usr/* $out/ 2>/dev/null || true
+    cp -r opt $out/ 2>/dev/null || true
+    cp -r bin $out/ 2>/dev/null || true
+
+    MAIN_BIN=$(find $out/opt -type f -executable -size +10M | head -n1)
+
+    if [ -n "$MAIN_BIN" ]; then
+      mkdir -p $out/bin
+      BIN_NAME=$(basename "$MAIN_BIN")
+      ln -s "$MAIN_BIN" "$out/bin/$BIN_NAME"
+
+      wrapProgram "$out/bin/$BIN_NAME" \
+        --prefix LD_LIBRARY_PATH : "${{{lib_path_expr}}}" \
+        --add-flags "--no-sandbox"
+    fi
+  '';
+
+  meta = {{
+    description = "Automatically packaged {name}";
+    platforms = [ "x86_64-linux" ];
+  }};
+}}

@@ -1,0 +1,6 @@
+{header}
+pkgs.appimageTools.wrapType2 {{
+  pname = "{name}"; version = "{version}";
+  src = {fetchurl} {{ url = "{url}"; sha256 = "{sha256}"; }};
+  extraPkgs = pkgs: with pkgs; [ {deps_string} ];
+}}
