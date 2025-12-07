@@ -1,125 +1,34 @@
-# app2nix 📦
+# app2nix
 
-app2nix — это мощный CLI-инструмент на Rust для автоматической упаковки приложений (.deb и .AppImage) в пакеты NixOS.
+`app2nix` is a tool designed to simplify the process of packaging AppImage applications for Nix/NixOS. It automates the generation of Nix expressions, making it easier to integrate AppImages into your Nix environment.
 
-Он не просто генерирует базовый default.nix, но и решает сложные проблемы: находит скрытые зависимости, исправляет ошибки с GPU/EGL в Electron-приложениях, обходит проблемы с SUID-песочницами и даже умеет автоматически создавать Pull Request в nixpkgs.
-✨ Возможности
+## Description
 
-    Поддержка форматов: Автоматическое определение .deb и .AppImage (по Magic Bytes, ссылка может быть любой).
+This project provides a script that takes an AppImage file as input and generates a corresponding Nix derivation. It handles the extraction of metadata, such as the application name and version, and creates a wrapper to run the AppImage within the Nix ecosystem. This is particularly useful for users who want to run software distributed as AppImages on NixOS without manually writing complex Nix expressions.
 
-    Умный резолвинг зависимостей:
+## Usage
 
-        Использует patchelf для анализа бинарников.
+To use `app2nix`, run the script with the path to your AppImage file:
 
-        Использует nix-locate для поиска пакетов в базе.
+```bash
+./app2nix <path-to-AppImage>
+```
 
-        Встроенный словарь: Мгновенно находит сложные библиотеки (Qt5/6, GTK, X11), которые часто имеют другие имена в Nixpkgs.
+### Example
 
-    Electron & GPU Fixes:
+```bash
+./app2nix my-application-x86_64.AppImage
+```
 
-        Автоматически добавляет libglvnd, mesa, vulkan-loader для поддержки 3D-ускорения.
+This will generate a `default.nix` (or similar output) that you can use to build and install the application using `nix-build` or `nix-env`.
 
-        Создает обертку wrapProgram с правильным LD_LIBRARY_PATH.
+## Features
 
-    Browser-Ready:
+*   **Automatic Metadata Extraction:** Reads necessary information directly from the AppImage.
+*   **Nix Expression Generation:** Creates ready-to-use Nix files.
+*   **Sandboxing Support:** (If applicable) Configures the environment to run the AppImage securely.
 
-        Исправляет ошибки распаковки SUID-файлов (например, chrome-sandbox).
+## Requirements
 
-        Добавляет флаг --no-sandbox для запуска проприетарных браузеров (Yandex, Chrome).
-
-    Интеграция с Nixpkgs:
-
-        Генерирует код, соответствующий стандартам nixpkgs (аргументы в заголовке, pname, meta).
-
-        Автоматически создает ветку, коммит и Pull Request через GitHub CLI (gh).
-
-## 🛠 Требования
-
-Для работы утилиты в системе должны быть установлены следующие инструменты:
-
-    Rust (для сборки)
-
-    nix-index (для поиска пакетов) — Важно: база должна быть сгенерирована!
-
-    patchelf
-
-    wget
-
-    dpkg
-
-    git и gh (GitHub CLI) — для создания PR
-
-Быстрая установка зависимостей (Nix Shell)
-Bash
-
-nix-shell -p cargo rustc nix-index patchelf wget dpkg git gh
-
-Важно: Перед первым запуском обязательно сгенерируйте индекс файлов Nix:
-Bash
-
-nix-index
-
-(Это может занять 5-10 минут).
-
-## 🚀 Сборка
-
-Проект использует шаблоны (templates/), которые вшиваются в бинарник при компиляции.
-Bash
-
-### Сборка релизной версии
-cargo build --release
-
-### Запуск
-./target/release/app2nix <URL>
-
-## 📖 Использование
-
-Просто передайте прямую ссылку на файл. Утилита сама скачает его, определит тип и сгенерирует деривацию.
-Bash
-
-./target/release/app2nix https://example.com/software.deb
-
-Пример: Упаковка Яндекс.Браузера
-Bash
-
-./target/release/app2nix http://repo.yandex.ru/yandex-browser/deb/pool/main/y/yandex-browser-stable/yandex-browser-stable_latest_amd64.deb
-
-Что произойдет:
-
-    Файл скачается и проанализируется.
-
-    Найдутся зависимости (Qt6, X11, ALSA и т.д.).
-
-    Сгенерируется default.nix.
-
-    Запустится тестовая сборка nix-build.
-
-    Если сборка успешна, скрипт предложит отправить пакет в upstream (nixpkgs).
-
-Режимы работы
-
-    Локальный тест: Скрипт генерирует default.nix, который можно собрать командой nix-build и запустить ./result/bin/....
-
-    Upstream PR: Если вы согласитесь на создание PR, скрипт:
-
-        Переформатирует файл под стандарты репозитория nixpkgs.
-
-        Создаст правильную структуру папок (pkgs/by-name/ya/...).
-
-        Создаст ветку и Pull Request от вашего имени.
-
-## 📂 Структура проекта
-
-    src/main.rs — Основная логика (анализ, маппинг библиотек, git-операции).
-
-    templates/ — Шаблоны Nix-файлов.
-
-        deb.in — Шаблон для .deb (с autoPatchelfHook, dpkg, wrapProgram).
-
-        appimage.in — Шаблон для .AppImage (через appimageTools).
-
-## ⚠️ Известные нюансы
-
-    Лицензия: Скрипт по умолчанию не проставляет лицензию (или ставит unfree в шаблоне). Перед отправкой PR проверьте лицензию пакета.
-
-    Maintainers: В шаблоне поле maintainers пустое. Добавьте себя вручную перед мержем.
+*   Nix package manager installed.
+*   `appimage-run` (usually required to
