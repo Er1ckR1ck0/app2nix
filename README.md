@@ -1,8 +1,18 @@
+<p align="center">
+  <img src="assets/image.png" alt="app2nix logo" width="250"/>
+</p>
+
 # app2nix
+
+<p align="center">
+  <a href="https://github.com/Er1ckR1ck0/app2nix/blob/main/assets/example.mp4" title="Click to watch a demo">
+    <img src="assets/image.png" alt="app2nix demo" width="600"/>
+  </a>
+</p>
 
 [![Rust](https://img.shields.io/badge/language-Rust-orange.svg)](https://www.rust-lang.org/)
 [![Nix](https://img.shields.io/badge/ecosystem-Nix-blue.svg)](https://nixos.org/)
-[![Example of work](https://github.com/Er1ckR1ck0/app2nix/blob/assets/example.mp4)](https://github.com/Er1ckR1ck0/app2nix/blob/assets/example.mp4)
+
 **app2nix** is a smart CLI tool that automates the packaging of Debian (`.deb`) applications for Nix/NixOS.
 
 Unlike simple converters that only read the `control` file, **app2nix** unpacks the package, scans binaries for ELF dependencies (using `patchelf`), and maps required shared libraries (`.so`) to their corresponding `nixpkgs` using `nix-locate`.
