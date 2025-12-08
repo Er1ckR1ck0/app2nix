@@ -1,5 +1,8 @@
 
 # app2nix
+<p align="center">
+  <img src="assets/image.png" alt="app2nix logo" width="2300"/>
+</p>
 
 [![Rust](https://img.shields.io/badge/language-Rust-orange.svg)](https://www.rust-lang.org/)
 [![Nix](https://img.shields.io/badge/ecosystem-Nix-blue.svg)](https://nixos.org/)
