@@ -1,4 +1,3 @@
 /target
-
-default.nix
 *.deb
+default.nix

@@ -1,14 +1,10 @@
-<p align="center">
-  <img src="assets/image.png" alt="app2nix logo" width="250"/>
-</p>
 
 # app2nix
 
 <p align="center">
-  <a href="https://github.com/Er1ckR1ck0/app2nix/blob/main/assets/example.mp4" title="Click to watch a demo">
-    <img src="assets/image.png" alt="app2nix demo" width="600"/>
-  </a>
+  <img src="assets/image.png" alt="app2nix logo" width="250"/>
 </p>
+
 
 [![Rust](https://img.shields.io/badge/language-Rust-orange.svg)](https://www.rust-lang.org/)
 [![Nix](https://img.shields.io/badge/ecosystem-Nix-blue.svg)](https://nixos.org/)
