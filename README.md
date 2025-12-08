@@ -1,5 +1,5 @@
-# app2nix
 
+# app2nix
 <p align="center">
     <img src="assets/image.jpg" alt="app2nix demo" width="1200"/>
 </p>
