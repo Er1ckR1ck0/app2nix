@@ -1,34 +1,31 @@
 # app2nix
 
-`app2nix` is a tool designed to simplify the process of packaging AppImage applications for Nix/NixOS. It automates the generation of Nix expressions, making it easier to integrate AppImages into your Nix environment.
+[![Rust](https://img.shields.io/badge/language-Rust-orange.svg)](https://www.rust-lang.org/)
+[![Nix](https://img.shields.io/badge/ecosystem-Nix-blue.svg)](https://nixos.org/)
 
-## Description
+**app2nix** is a CLI tool that automates the packaging of Debian (`.deb`) applications for Nix/NixOS.
 
-This project provides a script that takes an AppImage file as input and generates a corresponding Nix derivation. It handles the extraction of metadata, such as the application name and version, and creates a wrapper to run the AppImage within the Nix ecosystem. This is particularly useful for users who want to run software distributed as AppImages on NixOS without manually writing complex Nix expressions.
+It analyzes the `.deb` file, extracts dependencies, resolves them against `nixpkgs` using smart heuristics (handling library naming differences between Debian and Nix), and generates a ready-to-use `default.nix`.
 
-## Usage
+## 🚀 Features
 
-To use `app2nix`, run the script with the path to your AppImage file:
+* **Automatic Dependency Resolution**: Parses `Depends` fields from the `.deb` file and finds the corresponding packages in `nixpkgs` (e.g., maps `libgtk-3-0` to `pkgs.gtk3`).
+* **Smart Heuristics**: Uses fuzzy matching and JSON parsing to handle naming discrepancies (e.g., finding `xorg.libX11` when Debian asks for `libx11-6`).
+* **Standalone Generation**: Produces a `default.nix` that wraps the binary using `autoPatchelfHook` and `makeWrapper` for immediate usage.
+* **Metadata Extraction**: Automatically pulls version, description, and architecture from the package control file.
+
+## 📦 Installation
+
+### From Source
+
+Requirements:
+* Rust (cargo)
+* Nix (with `nix-command` and `flakes` enabled)
 
 ```bash
-./app2nix <path-to-AppImage>
+git clone [https://github.com/yourusername/app2nix.git](https://github.com/yourusername/app2nix.git)
+cd app2nix
+cargo build --release
+./target/release/app2nix [url]
+nix-env -if default.nix
 ```
-
-### Example
-
-```bash
-./app2nix my-application-x86_64.AppImage
-```
-
-This will generate a `default.nix` (or similar output) that you can use to build and install the application using `nix-build` or `nix-env`.
-
-## Features
-
-*   **Automatic Metadata Extraction:** Reads necessary information directly from the AppImage.
-*   **Nix Expression Generation:** Creates ready-to-use Nix files.
-*   **Sandboxing Support:** (If applicable) Configures the environment to run the AppImage securely.
-
-## Requirements
-
-*   Nix package manager installed.
-*   `appimage-run` (usually required to

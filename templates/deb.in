@@ -1,13 +1,13 @@
 {header}
 
-{stdenv} {{
+{stdenv} {
   pname = "{name}";
   version = "{version}";
 
-  src = {fetchurl} {{
+  src = {fetchurl} {
     url = "{url}";
     sha256 = "{sha256}";
-  }};
+  };
 
   dontWrapQtApps = true;
 
@@ -16,32 +16,45 @@
   ];
 
   buildInputs = [
-{build_inputs_body}
+{packages}
   ];
   
-  unpackPhase = "dpkg-deb --fsys-tarfile $src | tar -x --no-same-permissions --no-same-owner";
+  unpackPhase = ''
+    ar -x $src
+    tar -xf data.tar.xz
+  '';
 
+  # Ignore missing dependencies for Qt5 since we force Qt6
+  autoPatchelfIgnoreMissingDeps = [
+    "libQt5Core.so.5"
+    "libQt5Gui.so.5"
+    "libQt5Widgets.so.5"
+    "libQt6Core.so.6"
+    "libQt6Gui.so.6"
+    "libQt6Widgets.so.6"
+  ];
+  
   installPhase = ''
     mkdir -p $out
     cp -r usr/* $out/ 2>/dev/null || true
-    cp -r opt $out/ 2>/dev/null || true
-    cp -r bin $out/ 2>/dev/null || true
+    cp -r opt/* $out/ 2>/dev/null || true
+    cp -r bin/* $out/ 2>/dev/null || true
 
-    MAIN_BIN=$(find $out/opt -type f -executable -size +10M | head -n1)
+    MAIN_BIN=$(find $out -type f -executable -size +10M | head -n1)
 
     if [ -n "$MAIN_BIN" ]; then
       mkdir -p $out/bin
-      BIN_NAME=$(basename "$MAIN_BIN")
-      ln -s "$MAIN_BIN" "$out/bin/$BIN_NAME"
+      # USE -sf TO OVERWRITE EXISTING BINARY/WRAPPER FROM DEB
+      ln -sf "$MAIN_BIN" "$out/bin/{name}"
 
-      wrapProgram "$out/bin/$BIN_NAME" \
-        --prefix LD_LIBRARY_PATH : "${{{lib_path_expr}}}" \
+      wrapProgram "$out/bin/{name}" \
+        --prefix LD_LIBRARY_PATH : "${{lib_path_expr}}" \
         --add-flags "--no-sandbox"
     fi
   '';
 
-  meta = {{
-    description = "Automatically packaged {name}";
-    platforms = [ "x86_64-linux" ];
-  }};
-}}
+  meta = {
+    description = "{description}";
+    platforms = [ "{arch}" ];
+  };
+}
