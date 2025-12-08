@@ -12,7 +12,7 @@
   dontWrapQtApps = true;
 
   nativeBuildInputs = [
-{native}
+    {native}
   ];
 
   buildInputs = [

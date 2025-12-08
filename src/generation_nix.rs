@@ -32,7 +32,25 @@ pub fn generate_nix_content(
             .join("\n")
     };
 
-    let lib_list_local = "[ pkgs.libglvnd pkgs.mesa pkgs.libdrm pkgs.vulkan-loader pkgs.libxkbcommon ]";
+    let lib_list_local = "[ \
+        pkgs.systemd \
+        pkgs.libglvnd \
+        pkgs.mesa \
+        pkgs.libdrm \
+        pkgs.vulkan-loader \
+        pkgs.libxkbcommon \
+        pkgs.gtk3 \
+        pkgs.alsa-lib \
+        pkgs.nss \
+        pkgs.nspr \
+        pkgs.expat \
+        pkgs.dbus \
+        pkgs.at-spi2-core \
+        pkgs.pango \
+        pkgs.cairo \
+        pkgs.libsecret \
+        pkgs.libnotify \
+    ]";
     let lib_list_upstream = "[ libglvnd mesa libdrm vulkan-loader libxkbcommon ]";
 
     let additional_build_inputs = vec![
@@ -41,6 +59,26 @@ pub fn generate_nix_content(
         "pkgs.autoPatchelfHook",
         "pkgs.dpkg",
         "pkgs.makeWrapper",
+        
+        // Графика и системные
+        "pkgs.alsa-lib",
+        "pkgs.libdrm",
+        "pkgs.mesa",
+        "pkgs.nss",
+        "pkgs.nspr",
+        "pkgs.systemd", // Важно!
+        "pkgs.libsecret",
+        "pkgs.libnotify",
+        
+        // X11
+        "pkgs.xorg.libX11",
+        "pkgs.xorg.libXcomposite",
+        "pkgs.xorg.libXdamage",
+        "pkgs.xorg.libXext",
+        "pkgs.xorg.libXfixes",
+        "pkgs.xorg.libXrandr",
+        "pkgs.xorg.libxcb",
+        "pkgs.libxkbcommon",
     ];
 
     let header = if mode_upstream {
