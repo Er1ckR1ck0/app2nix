@@ -1,10 +1,9 @@
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Deserialize, Clone)]
-pub struct NixPackageInfo {
-    pub pname: Option<String>,
-    pub version: Option<String>,
-    pub description: Option<String>,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LibrariesConfig {
+    pub system_libs: Vec<String>,
+    pub lib_to_pkg_map: std::collections::HashMap<String, String>,
 }
 
 #[derive(Debug, Default)]
@@ -13,8 +12,7 @@ pub struct PackageInfo {
     pub version: String,
     pub deps: Vec<String>,
     pub arch: String,
-    pub description: String,
-    pub meta: String,
+    pub description: String
 }
 
 #[derive(Debug, PartialEq, Clone)]

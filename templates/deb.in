@@ -1,10 +1,10 @@
 {header}
 
-{stdenv} {
+pkgs.stdenv.mkDerivation {
   pname = "{name}";
   version = "{version}";
 
-  src = {fetchurl} {
+  src = pkgs.fetchurl {
     url = "{url}";
     sha256 = "{sha256}";
   };
@@ -12,28 +12,29 @@
   dontWrapQtApps = true;
 
   nativeBuildInputs = [
-    {native}
+    pkgs.autoPatchelfHook
+    pkgs.dpkg
+    pkgs.makeWrapper
   ];
 
   buildInputs = [
 {packages}
   ];
-  
+
   unpackPhase = ''
     ar -x $src
     tar -xf data.tar.xz
   '';
 
-  # Ignore missing dependencies for Qt5 since we force Qt6
   autoPatchelfIgnoreMissingDeps = [
-    "libQt5Core.so.5"
-    "libQt5Gui.so.5"
-    "libQt5Widgets.so.5"
-    "libQt6Core.so.6"
-    "libQt6Gui.so.6"
-    "libQt6Widgets.so.6"
-  ];
-  
+      "libQt5Core.so.5"
+      "libQt5Gui.so.5"
+      "libQt5Widgets.so.5"
+      "libQt6Core.so.6"
+      "libQt6Gui.so.6"
+      "libQt6Widgets.so.6"
+    ];
+
   installPhase = ''
     mkdir -p $out
     cp -r usr/* $out/ 2>/dev/null || true
@@ -44,11 +45,13 @@
 
     if [ -n "$MAIN_BIN" ]; then
       mkdir -p $out/bin
-      # USE -sf TO OVERWRITE EXISTING BINARY/WRAPPER FROM DEB
       ln -sf "$MAIN_BIN" "$out/bin/{name}"
 
+      # We use pkgs.lib.makeLibraryPath here
       wrapProgram "$out/bin/{name}" \
-        --prefix LD_LIBRARY_PATH : "${{lib_path_expr}}" \
+        --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [
+{lib_packages}
+        ]}" \
         --add-flags "--no-sandbox"
     fi
   '';
