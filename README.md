@@ -51,8 +51,6 @@ nix-build default.nix
 ## ⚠️ Known Limitations
 **80/20 Rule**: This tool aims to automate 80-90% of the work. Complex applications (especially Electron or Qt apps with hardcoded paths) might still require manual tweaking of the generated `default.nix`.
 
-**Database Requirement**: If `nix-locate` returns nothing, the tool will warn you about missing dependencies. Ensure your `nix-index` database is populated (see Prerequisites).
-
 ## 🗺️ Roadmap
 
 - [x] **Flake Support**: Simplify usage with `nix run`.
