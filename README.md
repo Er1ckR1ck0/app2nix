@@ -55,6 +55,6 @@ nix-build default.nix
 
 - [x] **Flake Support**: Simplify usage with `nix run`.
 - [x] **Optimize `default.nix` template**: Ensure output uses modern hooks like `autoPatchelfHook`.
-- [ ] **Automate PR creation**: Add support for creating Pull Requests to `nixpkgs` automatically.
-- [ ] **Advanced Heuristics**: Improve detection for "dirty" packages (Electron, Qt, proprietary blobs).
+- [x] **Automate PR creation**: Add support for creating Pull Requests to `nixpkgs` automatically.
+- [x] **Advanced Heuristics**: Improve detection for "dirty" packages (Electron, Qt, proprietary blobs).
 - [ ] **RPM Support**: Add support for `.rpm` packages.
